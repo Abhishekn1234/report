@@ -17,15 +17,14 @@ const authMiddleware = async (req, res, next) => {
         }
 
         try {
-            
             const user = await User.findById(payload.userId);
-          
+
             if (!user) {
                 return res.status(401).json({ error: "User not found" });
             }
 
             req.user = {
-                _id: user._id,
+                userId: user._id,
                 email: user.email,
                 fullName: user.fullName,
                 position: user.Designation,
