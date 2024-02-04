@@ -4,8 +4,9 @@ const { mongourl } = require("./db");
 const mongoose = require("mongoose");
 const port = 5000;
 const LoginRoute = require("./routes/user");
-const EmployeeRoute=require("./routes/employees");
-const AttandanceRoute=require("./routes/attandace");
+const EmployeeRoute = require("./routes/employees");
+const AttandanceRoute = require("./routes/attandace");
+
 const cors = require("cors");
 
 app.use(cors());
@@ -17,8 +18,8 @@ mongoose.connect(mongourl, { useNewUrlParser: true, useUnifiedTopology: true })
     .catch((err) => {
         console.log(err);
     });
-app.use("",AttandanceRoute);
-app.use("",EmployeeRoute);
+app.use("", AttandanceRoute);
+app.use("", EmployeeRoute);
 app.use("", LoginRoute);
 
 app.listen(port, () => {
