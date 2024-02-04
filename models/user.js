@@ -38,7 +38,7 @@ const userSchema = new mongoose.Schema({
             return this.isNew || this.isModified("password");
         },
     },
-   
+
 });
 
 const UserSchema = mongoose.model("User", userSchema);
