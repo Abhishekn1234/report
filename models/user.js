@@ -38,7 +38,18 @@ const userSchema = new mongoose.Schema({
             return this.isNew || this.isModified("password");
         },
     },
-
+    tokens: [{
+        token: {
+            type: String,
+            required: true
+        },
+        loginTime: {
+            type: Date
+        },
+        logoutTime: {
+            type: Date
+        },
+    }],
 });
 
 const UserSchema = mongoose.model("User", userSchema);
