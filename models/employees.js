@@ -13,7 +13,9 @@ const employeeSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-
+    joiningDate: {
+        type: Date,
+    },
 });
 
 const Employee = mongoose.model('Employee', employeeSchema);
