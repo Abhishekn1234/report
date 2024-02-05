@@ -4,6 +4,7 @@ const router = express.Router();
 const Attendance = require('../models/attandance');
 const User = require('../models/user');
 const authMiddleware = require('../middleware/auth');
+
 const jwt = require('jsonwebtoken');
 const { Jwt_Secret } = require("../db");
 router.post('/checkin', authMiddleware, async (req, res) => {
