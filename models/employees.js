@@ -16,6 +16,9 @@ const employeeSchema = new mongoose.Schema({
     joiningDate: {
         type: Date,
     },
+    projects:{
+        type:String,
+    },
 });
 
 const Employee = mongoose.model('Employee', employeeSchema);
