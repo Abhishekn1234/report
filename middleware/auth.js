@@ -23,24 +23,8 @@ const requireLogin = async (req, res, next) => {
                 return res.status(401).json({ message: 'User not found' });
             }
 
-           
-            const idleTimeout = 15 * 60 * 1000;
-            const currentTime = Date.now();
-            const lastActivityTime = user.lastActivityTime || 0;
-
-            if (currentTime - lastActivityTime > idleTimeout) {
-                
-                user.tokens = []; 
-                await user.save();
-
-                return res.status(401).json({ message: 'User logged out due to inactivity' });
-            }
-
-           
-            user.lastActivityTime = currentTime;
-            await user.save();
-
             req.user = user;
+            await user.save();
             next();
         } catch (error) {
             console.error(error);
