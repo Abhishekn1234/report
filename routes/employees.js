@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const Employee = require('../models/employees');
-const authMiddleware = require('../middleware/auth');
-router.get('/employees', authMiddleware, async (req, res) => {
+const requireLogin= require('../middleware/auth');
+router.get('/employees', requireLogin, async (req, res) => {
     try {
         
         const employees = await Employee.find({ userId: req.user.userId });
@@ -12,7 +12,7 @@ router.get('/employees', authMiddleware, async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 });
-router.get('/employees/:id', authMiddleware, async (req, res) => {
+router.get('/employees/:id', requireLogin, async (req, res) => {
     try {
         const employee = await Employee.findOne({ _id: req.params.id, userId: req.user.userId });
         
@@ -27,10 +27,10 @@ router.get('/employees/:id', authMiddleware, async (req, res) => {
     }
 });
 
-router.post('/employees', authMiddleware, async (req, res) => {
+router.post('/employees', requireLogin, async (req, res) => {
     try {
-        const { name, position, department } = req.body;
-        const newEmployee = new Employee({ name, position, department, userId: req.user.userId });
+        const { name, position, department,joiningDate,projects } = req.body;
+        const newEmployee = new Employee({ name, position, department, userId: req.user.userId,joiningDate,projects});
         await newEmployee.save();
         res.status(201).json({ message: 'Employee added successfully' });
     } catch (err) {
@@ -40,10 +40,10 @@ router.post('/employees', authMiddleware, async (req, res) => {
 });
 
 
-router.put('/employees/:id', authMiddleware, async (req, res) => {
+router.put('/employees/:id', requireLogin, async (req, res) => {
     try {
         const employeeId = req.params.id;
-        const { name, position, department } = req.body;
+        const { name, position, department,joiningDate,projects } = req.body;
 
         const employee = await Employee.findOne({ _id: employeeId, userId: req.user.userId });
 
@@ -54,7 +54,8 @@ router.put('/employees/:id', authMiddleware, async (req, res) => {
         employee.name = name;
         employee.position = position;
         employee.department = department;
-
+        employee.joiningDate=joiningDate;
+        employee.projects=projects;
         const updatedEmployee = await employee.save();
 
         return res.status(200).json({ message: 'Employee updated successfully', data: updatedEmployee });
@@ -65,7 +66,7 @@ router.put('/employees/:id', authMiddleware, async (req, res) => {
 });
 
 
-router.delete('/employees/:id', authMiddleware, async (req, res) => {
+router.delete('/employees/:id', requireLogin, async (req, res) => {
     try {
         const employeeId = req.params.id;
 
@@ -83,10 +84,10 @@ router.delete('/employees/:id', authMiddleware, async (req, res) => {
 });
 
 
-router.patch('/employees/:id', authMiddleware, async (req, res) => {
+router.patch('/employees/:id', requireLogin, async (req, res) => {
     try {
         const employeeId = req.params.id;
-        const { name, position, department } = req.body;
+        const { name, position, department,joiningDate,projects } = req.body;
         const employee = await Employee.findOne({ _id: employeeId, userId: req.user.userId });
 
         if (!employee) {
@@ -101,6 +102,12 @@ router.patch('/employees/:id', authMiddleware, async (req, res) => {
         }
         if (department) {
             employee.department = department;
+        }
+        if(joiningDate){
+            employee.joiningDate=joiningDate;
+        }
+        if(projects){
+            employee.projects=projects;
         }
 
         const updatedEmployee = await employee.save();

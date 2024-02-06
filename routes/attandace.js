@@ -3,11 +3,11 @@ const mongoose = require('mongoose');
 const router = express.Router();
 const Attendance = require('../models/attandance');
 const User = require('../models/user');
-const authMiddleware = require('../middleware/auth');
+const requireLogin = require('../middleware/auth');
 
 const jwt = require('jsonwebtoken');
 const { Jwt_Secret } = require("../db");
-router.post('/checkin', authMiddleware, async (req, res) => {
+router.post('/checkin', requireLogin, async (req, res) => {
     try {
         const { userId, fullName, position } = req.user;
         const checkInTime = new Date();
@@ -41,7 +41,7 @@ router.post('/checkin', authMiddleware, async (req, res) => {
     }
 });
 
-router.post('/checkout', authMiddleware, async (req, res) => {
+router.post('/checkout', requireLogin, async (req, res) => {
     try {
         const { userId, fullName, position } = req.user;
         const checkOutTime = new Date();
@@ -83,7 +83,7 @@ const calculateWorkingHours = (checkInTime, checkOutTime) => {
 
     return { hours, minutes, seconds };
 };
-router.get('/working-hours/:userId', authMiddleware, async (req, res) => {
+router.get('/working-hours/:userId', requireLogin, async (req, res) => {
     const userId = req.params.userId;
 
     try {
@@ -169,7 +169,7 @@ router.get('/working-hours/:userId', authMiddleware, async (req, res) => {
         }
     }
 });
-router.get('/latest-checkinout/:userId', authMiddleware, async (req, res) => {
+router.get('/latest-checkinout/:userId', requireLogin, async (req, res) => {
     const userId = req.params.userId;
 
     try {
